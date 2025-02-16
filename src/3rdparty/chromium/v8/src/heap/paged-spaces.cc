@@ -346,10 +346,13 @@ void PagedSpaceBase::ShrinkImmortalImmovablePages() {
   BasicMemoryChunk::UpdateHighWaterMark(allocation_info_.top());
   FreeLinearAllocationArea();
   ResetFreeList();
+#ifndef V8_OS_GENODE
+  /* shrinking of pages via partial munmap() is currently not supported on Genode */
   for (Page* page : *this) {
     DCHECK(page->IsFlagSet(Page::NEVER_EVACUATE));
     ShrinkPageToHighWaterMark(page);
   }
+#endif
 }
 
 Page* PagedSpaceBase::TryExpandImpl() {

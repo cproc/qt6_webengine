@@ -1009,8 +1009,11 @@ void MarkCompactCollector::Finish() {
   // pointers" phase.
   DCHECK(!heap_->memory_allocator()->unmapper()->IsRunning());
 
+#ifndef V8_OS_GENODE
+  /* shrinking of pages via partial munmap() is currently not supported on Genode */
   // Shrink pages if possible after processing and filtering slots.
   ShrinkPagesToObjectSizes(heap(), heap()->lo_space());
+#endif
 
 #ifdef DEBUG
   DCHECK(state_ == SWEEP_SPACES || state_ == RELOCATE_OBJECTS);
