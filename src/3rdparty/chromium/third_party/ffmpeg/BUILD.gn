@@ -11,7 +11,7 @@ import("//build/config/sanitizers/sanitizers.gni")
 
 # Path to platform configuration files.
 platform_config_root =
-    "chromium/config/$ffmpeg_branding/$os_config/$ffmpeg_arch"
+    "chromium/config/$ffmpeg_branding/linux/$ffmpeg_arch"
 
 has_nasm_deps =
     ffmpeg_asm_sources != [] &&
