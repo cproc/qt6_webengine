@@ -411,7 +411,7 @@ qt_feature("webengine-qt-harfbuzz" PRIVATE
 )
 qt_feature("webengine-system-freetype" PRIVATE
     LABEL "freetype"
-    CONDITION UNIX AND TARGET Qt::Gui AND TEST_freetype AND QT_FEATURE_system_freetype
+    CONDITION UNIX AND TARGET Qt::Gui AND QT_FEATURE_system_freetype
 )
 qt_feature("webengine-qt-freetype" PRIVATE
     LABEL "qtfreetype"
