@@ -297,7 +297,7 @@ constexpr size_t kNumPools = kMaxPoolHandle - 1;
 // 8GB for each of the glued pools).
 #if BUILDFLAG(HAS_64_BIT_POINTERS)
 #if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_IOS) || PA_CONFIG(POINTER_COMPRESSION) || BUILDFLAG(IS_BSD)
-constexpr size_t kPoolMaxSize = 8 * kGiB;
+constexpr size_t kPoolMaxSize = 256 * kGiB / 1024;
 #else
 constexpr size_t kPoolMaxSize = 16 * kGiB;
 #endif
