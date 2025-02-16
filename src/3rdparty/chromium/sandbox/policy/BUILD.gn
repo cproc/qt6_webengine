@@ -116,7 +116,7 @@ component("policy") {
     ]
     libs = [ "util" ]
   }
-  if (is_freebsd) {
+  if (is_freebsd && false) {
     sources += [
       "freebsd/sandbox_freebsd.cc",
       "freebsd/sandbox_freebsd.h",
