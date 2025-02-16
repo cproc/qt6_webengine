@@ -124,9 +124,9 @@ endif()
 #  GN PROJECT
 ##
 
-if(CMAKE_CROSSCOMPILING AND NOT Gn_FOUND)
-   message(FATAL_ERROR "No gn found for cross-compilation")
-endif()
+#if(CMAKE_CROSSCOMPILING AND NOT Gn_FOUND)
+#   message(FATAL_ERROR "No gn found for cross-compilation")
+#endif()
 
 if(NOT Gn_FOUND)
     externalproject_add(gn
@@ -162,9 +162,9 @@ endif()
 
 if(CMAKE_CROSSCOMPILING AND NOT IOS AND NOT MACOS)
 
-    if(NOT Gn_FOUND)
-        message(FATAL_ERROR "\nHost gn not found - cross compilation not possible")
-    endif()
+#    if(NOT Gn_FOUND)
+#        message(FATAL_ERROR "\nHost gn not found - cross compilation not possible")
+#    endif()
 
     externalproject_add(hostBuild
         SOURCE_DIR  ${CMAKE_CURRENT_LIST_DIR}/host
