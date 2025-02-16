@@ -479,6 +479,24 @@ void OS::Release(void* address, size_t size) {
   CHECK_EQ(0, munmap(address, size));
 }
 
+#if defined(V8_OS_GENODE)
+
+#include <libc/genode.h>
+
+extern "C" int mprotect(void *addr, ::size_t len, int prot)
+{
+	/*
+	 * At least flush the cache for the area if it is to be made executable.
+	 * This is usually done by the Linux kernel and probably needed for ARM.
+	 */
+
+	if (prot & PROT_EXEC)
+		genode_cache_coherent(addr, len);
+
+	return 0;
+}
+#endif /* OS_GENODE */
+
 // static
 bool OS::SetPermissions(void* address, size_t size, MemoryPermission access) {
   DCHECK_EQ(0, reinterpret_cast<uintptr_t>(address) % CommitPageSize());
