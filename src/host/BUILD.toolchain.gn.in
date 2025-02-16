@@ -14,7 +14,7 @@ gcc_toolchain("@GN_TOOLCHAIN@") {
     current_os = "@GN_OS@"
     current_cpu = "@GN_CPU@"
     v8_current_cpu = "@GN_V8_CPU@"
-    is_clang = @GN_IS_CLANG@
+    is_clang = @GN_IS_CLANG@ && false
     use_gold = false
   }
 }
