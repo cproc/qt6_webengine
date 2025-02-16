@@ -20,7 +20,7 @@ namespace {
 wgpu::BackendType GetDefaultBackendType() {
 #if BUILDFLAG(IS_WIN)
   return wgpu::BackendType::D3D12;
-#elif BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+#elif BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
   return wgpu::BackendType::Vulkan;
 #else
   NOTREACHED();
