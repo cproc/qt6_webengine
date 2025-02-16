@@ -17,7 +17,7 @@
  */
 
 #include <fcntl.h>
-#if !defined(__OpenBSD__)
+#if !defined(__OpenBSD__) && 0
 #include <malloc.h>
 #endif
 #include <stdint.h>
