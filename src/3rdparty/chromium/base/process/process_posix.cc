@@ -400,6 +400,7 @@ int Process::GetPriority() const {
 #endif
 }
 
+#if defined(OS_BSD)
 Time Process::CreationTime() const {
 // avoid ps pledge in the network process
 #if !defined(OS_BSD)
@@ -442,5 +443,6 @@ bool Process::SetProcessBackgrounded(bool value) {
 bool Process::CanBackgroundProcesses() {
   return false;
 }
+#endif
 
 }  // namespace base
