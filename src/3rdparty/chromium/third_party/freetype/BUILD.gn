@@ -13,13 +13,8 @@ if (use_system_freetype) {
   # Only provided for distributions which prefer to keep linking to FreeType on
   # the system, use with caution,for details see build/config/freetype/BUILD.gn.
   import("//build/config/linux/pkg_config.gni")
-  pkg_config("freetype_from_pkgconfig") {
-    visibility = [
-      "//build/config/freetype:freetype",
-      "//third_party:freetype_harfbuzz",
-      "//third_party/harfbuzz-ng:harfbuzz_source",
-    ]
-    packages = [ "freetype2" ]
+  config("freetype_from_pkgconfig") {
+    libs = [ "freetype" ]
   }
 } else if (use_qt_freetype) {
   # see root BUILD.gn
