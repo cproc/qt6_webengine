@@ -352,9 +352,13 @@ void DecommitAndZeroSystemPagesInternal(uintptr_t address, size_t length) {
   // new mapping is established." As a consequence, the memory will be
   // zero-initialized on next access.
   void* ptr = reinterpret_cast<void*>(address);
+#ifdef OS_GENODE
+  memset(ptr, 0, length);
+#else
   void* ret = mmap(ptr, length, PROT_NONE,
                    MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
   PA_CHECK(ptr == ret);
+#endif
 }
 
 void RecommitSystemPagesInternal(
