@@ -63,7 +63,7 @@ if (angle_has_build) {
     angle_use_x11 = ozone_platform_x11 && !is_ggp && (is_linux || is_chromeos)
     angle_use_wayland =
         ozone_platform_wayland && !is_ggp && is_linux && !is_castos
-    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp && false
   }
 } else {
   declare_args() {
@@ -84,7 +84,7 @@ if (angle_has_build) {
   }
 
   declare_args() {
-    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp && false
   }
 }
 
@@ -131,7 +131,7 @@ declare_args() {
   }
 
   # Vulkan loader is statically linked on Mac. http://anglebug.com/4477
-  angle_shared_libvulkan = !is_mac
+  angle_shared_libvulkan = !is_mac && !is_freebsd
 
   # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
   angle_is_winuwp = is_win && target_os == "winuwp"
@@ -166,9 +166,9 @@ declare_args() {
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
   angle_enable_gl =
-      (ozone_platform_gbm || ozone_platform_wayland || !is_linux ||
+      ((ozone_platform_gbm || ozone_platform_wayland || !is_linux ||
        ((angle_use_x11 && !is_chromeos) || angle_use_wayland || is_castos)) &&
-      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
+      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64) || true
 
   angle_enable_vulkan =
       angle_has_build &&
@@ -176,7 +176,7 @@ declare_args() {
       ((is_win && !angle_is_winuwp) ||
        ((is_linux || is_chromeos) &&
         (angle_use_x11 || angle_use_wayland || angle_use_vulkan_display)) ||
-       is_android || is_fuchsia || is_ggp || angle_enable_msl_through_spirv)
+       is_android || is_fuchsia || is_ggp || angle_enable_msl_through_spirv) && false
 
   # When set to true, ANGLE will not use VK_KHR_surface and VK_KHR_swapchain
   # extensions. Content can be rendered only off-screen.
