@@ -187,6 +187,14 @@ uintptr_t SystemAllocPagesInternal(uintptr_t hint,
   }
 #endif
 
+#if defined(OS_GENODE)
+  /*
+   * The access type cannot be changed later with 'mprotect()' on Genode,
+   * but some memory needs to be executable.
+   */
+  access_flag |= PROT_EXEC;
+#endif
+
   void* ret = mmap(reinterpret_cast<void*>(hint), length, access_flag,
                    map_flags, fd, 0);
   if (ret == MAP_FAILED) {
