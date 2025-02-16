@@ -1048,7 +1048,7 @@ int ContentMainRunnerImpl::Initialize(ContentMainParams params) {
   }
 #endif
 
-#if BUILDFLAG(IS_BSD)
+#if BUILDFLAG(IS_BSD) && 0
   if (process_type.empty()) {
     sandbox::policy::SandboxLinux::Options sandbox_options;
     sandbox::policy::SandboxLinux::GetInstance()->InitializeSandbox(
