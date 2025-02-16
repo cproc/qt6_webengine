@@ -26,6 +26,10 @@ int SysInfo::NumberOfProcessors() {
 }
 
 uint64_t SysInfo::AmountOfPhysicalMemoryImpl() {
+#ifdef __GENODE__
+  /* The JetStream 2 benchmark needed more than 512M */
+  return 600 * 1024 * 1024;
+#else
   int pages, page_size, r = 0;
   size_t size = sizeof(pages);
 
@@ -40,6 +44,7 @@ uint64_t SysInfo::AmountOfPhysicalMemoryImpl() {
   }
 
   return static_cast<uint64_t>(pages) * page_size;
+#endif
 }
 
 uint64_t SysInfo::AmountOfAvailablePhysicalMemoryImpl() {
