@@ -169,7 +169,7 @@ bool AreVideoStatsInvalid(const media::mojom::WebrtcVideoStats& video_stats) {
          video_stats.frames_processed >
              WebrtcVideoStatsDB::kFramesProcessedMaxValue ||
          video_stats.key_frames_processed > video_stats.frames_processed ||
-         isnan(video_stats.p99_processing_time_ms) ||
+         std::isnan(video_stats.p99_processing_time_ms) ||
          video_stats.p99_processing_time_ms <
              WebrtcVideoStatsDB::kP99ProcessingTimeMinValueMs ||
          video_stats.p99_processing_time_ms >
