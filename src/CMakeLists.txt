@@ -65,7 +65,7 @@ cmake_minimum_required(VERSION ${QT_SUPPORTED_MIN_CMAKE_VERSION_FOR_BUILDING_WEB
 
 if(QT_FEATURE_qtwebengine_core_build)
    add_subdirectory(core)
-   add_subdirectory(process)
+   #add_subdirectory(process)
 endif()
 if(QT_FEATURE_qtwebengine_widgets_build)
    add_subdirectory(webenginewidgets)
