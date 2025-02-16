@@ -268,7 +268,7 @@ class PA_COMPONENT_EXPORT(PARTITION_ALLOC) PartitionAddressSpace {
   static_assert(base::bits::IsPowerOfTwo(kPkeyPoolSize));
 #endif
   static constexpr size_t kConfigurablePoolMaxSize = kPoolMaxSize;
-  static constexpr size_t kConfigurablePoolMinSize = 1 * kGiB;
+  static constexpr size_t kConfigurablePoolMinSize = 256 * kGiB / 1024;
   static_assert(kConfigurablePoolMinSize <= kConfigurablePoolMaxSize);
   static_assert(base::bits::IsPowerOfTwo(kConfigurablePoolMaxSize));
   static_assert(base::bits::IsPowerOfTwo(kConfigurablePoolMinSize));
