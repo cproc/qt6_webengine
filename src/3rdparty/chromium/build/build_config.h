@@ -93,6 +93,9 @@
 #define OS_FUCHSIA 1
 #elif defined(__FreeBSD__)
 #define OS_FREEBSD 1
+#if defined(__GENODE__)
+#define OS_GENODE 1
+#endif
 #elif defined(__NetBSD__)
 #define OS_NETBSD 1
 #elif defined(__OpenBSD__)
@@ -180,6 +183,12 @@
 #define BUILDFLAG_INTERNAL_IS_FUCHSIA() (1)
 #else
 #define BUILDFLAG_INTERNAL_IS_FUCHSIA() (0)
+#endif
+
+#if defined(OS_GENODE)
+#define BUILDFLAG_INTERNAL_IS_GENODE() (1)
+#else
+#define BUILDFLAG_INTERNAL_IS_GENODE() (0)
 #endif
 
 #if defined(OS_IOS)
