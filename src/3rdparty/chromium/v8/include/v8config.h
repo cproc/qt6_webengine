@@ -129,6 +129,9 @@ path. Add it with -I<path> to the command line
 # define V8_OS_BSD 1
 # define V8_OS_FREEBSD 1
 # define V8_OS_POSIX 1
+#if defined (__GENODE__)
+# define V8_OS_GENODE 1
+#endif
 # define V8_OS_STRING "freebsd"
 
 #elif defined(__Fuchsia__)
