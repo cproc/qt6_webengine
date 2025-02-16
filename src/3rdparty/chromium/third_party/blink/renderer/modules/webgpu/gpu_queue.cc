@@ -707,7 +707,7 @@ bool GPUQueue::CopyFromCanvasSourceImage(
 // platform requires interop supported. According to the bug, this change will
 // be a long time task. So disable using webgpu mailbox texture uploading path
 // on linux platform.
-#if BUILDFLAG(IS_LINUX)
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
   use_webgpu_mailbox_texture = false;
   unaccelerated_image = image->MakeUnaccelerated();
   image = unaccelerated_image.get();

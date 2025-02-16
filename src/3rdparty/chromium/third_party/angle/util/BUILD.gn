@@ -292,7 +292,7 @@ foreach(is_shared_library,
     ]
     libs = []
 
-    if (is_linux || is_chromeos) {
+    if ((is_linux || is_chromeos) && !is_bsd) {
       libs += [
         "rt",
         "dl",
