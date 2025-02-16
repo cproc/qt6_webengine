@@ -64,7 +64,7 @@ bool StructTraits<blink::mojom::RendererPreferencesDataView,
   if (!data.ReadAcceptLanguages(&out->accept_languages))
     return false;
 
-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
   if (!data.ReadSystemFontFamilyName(&out->system_font_family_name))
     return false;
 #endif

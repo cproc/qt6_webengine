@@ -86,7 +86,8 @@
           "cros",
           "linux",
           "openbsd",
-          "fuchsia"
+          "fuchsia",
+          "freebsd"
         ]
       },
       {
