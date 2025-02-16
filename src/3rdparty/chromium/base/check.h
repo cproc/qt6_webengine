@@ -157,7 +157,7 @@ class BASE_EXPORT NotReachedNoreturnError : public CheckError {
 // calling an out-of-line function instead of a noreturn inline macro prevents
 // compiler optimizations.
 #define CHECK(condition) \
-  UNLIKELY(!(condition)) ? logging::CheckFailure() : EAT_CHECK_STREAM_PARAMS()
+  UNLIKELY(!(condition)) ? (fprintf(stderr, "Error: CHECK(%s) failed\n", #condition), logging::CheckFailure()) : EAT_CHECK_STREAM_PARAMS()
 
 #define CHECK_WILL_STREAM() false
 
