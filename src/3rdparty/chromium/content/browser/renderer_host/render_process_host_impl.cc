@@ -1676,12 +1676,15 @@ bool RenderProcessHostImpl::Init() {
   int flags = ChildProcessHost::CHILD_NORMAL;
 #endif
 
+#if defined(OS_GENODE)
+  base::FilePath renderer_path { };
+#else
   // Find the renderer before creating the channel so if this fails early we
   // return without creating the channel.
   base::FilePath renderer_path = ChildProcessHost::GetChildPath(flags);
   if (renderer_path.empty())
     return false;
-
+#endif
   is_initialized_ = true;
   is_dead_ = false;
   sent_render_process_ready_ = false;
