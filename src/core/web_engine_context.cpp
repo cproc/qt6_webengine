@@ -690,8 +690,9 @@ WebEngineContext::WebEngineContext()
             initCommandLine(useEmbeddedSwitches, enableGLSoftwareRendering);
 
     setupProxyPac(parsedCommandLine);
+#if 0
     parsedCommandLine->AppendSwitchPath(switches::kBrowserSubprocessPath, WebEngineLibraryInfo::getPath(content::CHILD_PROCESS_EXE));
-
+#endif
     parsedCommandLine->AppendSwitchASCII(switches::kApplicationName, QCoreApplication::applicationName().toUtf8().toPercentEncoding().toStdString());
 
     // Enable sandboxing on OS X and Linux (Desktop / Embedded) by default.
