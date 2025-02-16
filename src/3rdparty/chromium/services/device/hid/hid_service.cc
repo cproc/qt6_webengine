@@ -74,7 +74,7 @@ std::unique_ptr<HidService> HidService::Create() {
   return std::make_unique<HidServiceLinux>();
 #elif BUILDFLAG(IS_OPENBSD)
   return std::make_unique<HidServiceFido>();
-#elif BUILDFLAG(IS_FREEBSD)
+#elif BUILDFLAG(IS_FREEBSD) && 0
   return std::make_unique<HidServiceFreeBSD>();
 #elif BUILDFLAG(IS_MAC)
   return std::make_unique<HidServiceMac>();

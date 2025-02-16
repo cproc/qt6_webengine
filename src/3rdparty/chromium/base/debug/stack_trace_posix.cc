@@ -14,7 +14,9 @@
 #include <string.h>
 #include <sys/param.h>
 #include <sys/stat.h>
+#if 0
 #include <sys/syscall.h>
+#endif
 #include <sys/types.h>
 #include <unistd.h>
 
