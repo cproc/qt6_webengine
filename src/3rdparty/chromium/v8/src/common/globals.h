@@ -157,7 +157,12 @@ namespace internal {
 //  - on Arm64 when running in single-process mode for Android WebView, when
 //    initializing V8 we already have a large stack and so have to set the
 //    limit lower. See issue crbug.com/v8/10575
+#ifdef V8_OS_GENODE
+// default stack size on Genode is currently 256K
+#define V8_DEFAULT_STACK_SIZE_KB (250 - 120)
+#else
 #define V8_DEFAULT_STACK_SIZE_KB 864
+#endif
 #elif V8_TARGET_ARCH_IA32
 // In mid-2022, we're observing an increase in stack overflow crashes on
 // 32-bit Windows; the suspicion is that some third-party software suddenly
@@ -166,9 +171,14 @@ namespace internal {
 // being. See crbug.com/1346791.
 #define V8_DEFAULT_STACK_SIZE_KB 864
 #else
+#ifdef V8_OS_GENODE
+// default stack size on Genode is currently 256K
+#define V8_DEFAULT_STACK_SIZE_KB 250
+#else
 // Slightly less than 1MB, since Windows' default stack size for
 // the main execution thread is 1MB.
 #define V8_DEFAULT_STACK_SIZE_KB 984
+#endif
 #endif
 
 // Helper macros to enable handling of direct C calls in the simulator.
@@ -192,10 +202,17 @@ constexpr int kStackSpaceRequiredForCompilation = 40;
 // stack frame sizes <= slack` can simply emit the simple stack check.
 constexpr int kStackLimitSlackForDeoptimizationInBytes = 256;
 
+#ifdef V8_OS_GENODE
+// default stack size on Genode is currently 256K
+static_assert(V8_DEFAULT_STACK_SIZE_KB * KB +
+                  kStackLimitSlackForDeoptimizationInBytes <=
+              256*KB);
+#else
 // Sanity-check, assuming that we aim for a real OS stack size of at least 1MB.
 static_assert(V8_DEFAULT_STACK_SIZE_KB * KB +
                   kStackLimitSlackForDeoptimizationInBytes <=
               MB);
+#endif
 
 // The V8_ENABLE_NEAR_CODE_RANGE_BOOL enables logic that tries to allocate
 // code range within a pc-relative call/jump proximity from embedded builtins.
