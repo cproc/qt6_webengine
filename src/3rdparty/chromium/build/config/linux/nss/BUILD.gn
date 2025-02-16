@@ -8,11 +8,9 @@ if (is_linux || is_chromeos) {
   # This is a dependency on NSS with no libssl3. On Linux and Chrome OS, we use
   # NSS for platform certificate integration. We use our own TLS library, so
   # exclude the one from NSS.
-  pkg_config("nss") {
-    packages = [ "nss" ]
-    extra_args = [
-      "-v",
-      "-lssl3",
-    ]
+  config("nss") {
+    if (current_toolchain != host_toolchain) {
+      libs = ["nss3"]
+    }
   }
 }
