@@ -105,6 +105,9 @@ evsignal_cb(int fd, short what, void *arg)
 int
 evsignal_init(struct event_base *base)
 {
+#ifdef __GENODE__
+	return -1;
+#else
 	int i;
 
 	/* 
@@ -143,6 +146,7 @@ evsignal_init(struct event_base *base)
 	base->sig.ev_signal.ev_flags |= EVLIST_INTERNAL;
 
 	return 0;
+#endif
 }
 
 /* Helper: set the signal handler for evsignal to handler in base, so that
