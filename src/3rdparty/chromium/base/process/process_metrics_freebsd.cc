@@ -12,9 +12,10 @@
 #include <unistd.h>
 
 #include <fcntl.h> /* O_RDONLY */
+#if 0
 #include <kvm.h>
 #include <libutil.h>
-
+#endif
 #include "base/memory/ptr_util.h"
 #include "base/process/process_metrics_iocounters.h"
 #include "base/values.h"
@@ -84,6 +85,7 @@ size_t GetSystemCommitCharge() {
 }
 
 int64_t GetNumberOfThreads(ProcessHandle process) {
+#if 0
   // Taken from FreeBSD top (usr.bin/top/machine.c)
 
   kvm_t* kd = kvm_open(NULL, "/dev/null", NULL, O_RDONLY, "kvm_open");
@@ -100,6 +102,9 @@ int64_t GetNumberOfThreads(ProcessHandle process) {
     return 0;
 
   return nproc;
+#else
+  return 0;
+#endif
 }
 
 bool GetSystemMemoryInfo(SystemMemoryInfoKB *meminfo) {
@@ -138,6 +143,7 @@ bool GetSystemMemoryInfo(SystemMemoryInfoKB *meminfo) {
 }
 
 int ProcessMetrics::GetOpenFdCount() const {
+#if 0
   struct kinfo_file * kif;
   int cnt;
 
@@ -147,6 +153,9 @@ int ProcessMetrics::GetOpenFdCount() const {
   free(kif);
 
   return cnt;
+#else
+  return -1;
+#endif
 }
 
 int ProcessMetrics::GetOpenFdSoftLimit() const {
@@ -164,6 +173,7 @@ int ProcessMetrics::GetOpenFdSoftLimit() const {
 }
 
 size_t ProcessMetrics::GetResidentSetSize() const {
+#if 0
   kvm_t *kd = kvm_open(nullptr, "/dev/null", nullptr, O_RDONLY, "kvm_open");
 
   if (kd == nullptr)
@@ -187,9 +197,13 @@ size_t ProcessMetrics::GetResidentSetSize() const {
 
   kvm_close(kd);
   return rss;
+#else
+  return 0;
+#endif
 }
 
 uint64_t ProcessMetrics::GetVmSwapBytes() const {
+#if 0
   kvm_t *kd = kvm_open(nullptr, "/dev/null", nullptr, O_RDONLY, "kvm_open");
 
   if (kd == nullptr)
@@ -215,6 +229,9 @@ uint64_t ProcessMetrics::GetVmSwapBytes() const {
 
   kvm_close(kd);
   return swrss;
+#else
+  return 0;
+#endif
 }
 
 int ProcessMetrics::GetIdleWakeupsPerSecond() {
