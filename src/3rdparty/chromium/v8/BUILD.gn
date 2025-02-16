@@ -5807,7 +5807,7 @@ v8_component("v8_libbase") {
       "src/base/debug/stack_trace_posix.cc",
       "src/base/platform/platform-freebsd.cc",
     ]
-    libs = [ "execinfo" ]
+#    libs = [ "execinfo" ]
   } else if (current_os == "aix") {
     sources += [
       "src/base/debug/stack_trace_posix.cc",
