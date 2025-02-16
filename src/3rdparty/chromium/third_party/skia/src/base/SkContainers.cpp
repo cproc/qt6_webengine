@@ -15,7 +15,11 @@
 #if defined(SK_BUILD_FOR_MAC) || defined(SK_BUILD_FOR_IOS)
 #include <malloc/malloc.h>
 #elif defined(SK_BUILD_FOR_ANDROID) || defined(SK_BUILD_FOR_UNIX) && !defined(__OpenBSD__)
+#if 0
 #include <malloc.h>
+#else
+#include <malloc_np.h>
+#endif
 #elif defined(SK_BUILD_FOR_WIN)
 #include <malloc.h>
 #endif

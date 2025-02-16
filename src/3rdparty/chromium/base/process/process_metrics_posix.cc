@@ -20,7 +20,7 @@
 
 #if BUILDFLAG(IS_APPLE)
 #include <malloc/malloc.h>
-#elif BUILDFLAG(IS_OPENBSD)
+#elif BUILDFLAG(IS_OPENBSD) || 1
 #include <stdlib.h>
 #else
 #include <malloc.h>
