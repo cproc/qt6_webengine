@@ -15,7 +15,9 @@
 #if __has_include(<drm_fourcc.h>)
 #include <drm_fourcc.h>
 #else
+#if 0
 #include <libdrm/drm_fourcc.h>
+#endif
 #endif
 #include <unistd.h>
 
@@ -33,7 +35,7 @@
 
 namespace gfx {
 
-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+#if (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)) && 0
 static_assert(NativePixmapHandle::kNoModifier == DRM_FORMAT_MOD_INVALID,
               "gfx::NativePixmapHandle::kNoModifier should be an alias for"
               "DRM_FORMAT_MOD_INVALID");
