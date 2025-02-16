@@ -549,7 +549,7 @@ int BrowserMainLoop::EarlyInitialization() {
   // by now since a thread to start the ServiceManager has been created
   // before the browser main loop starts.
   DCHECK(SandboxHostLinux::GetInstance()->IsInitialized());
-#elif BUILDFLAG(IS_BSD)
+#elif BUILDFLAG(IS_BSD) && 0
   base::FileHandleMappingVector additional_remapped_fds;
   base::LaunchOptions options;
   SandboxHostLinux::GetInstance()->Init();
