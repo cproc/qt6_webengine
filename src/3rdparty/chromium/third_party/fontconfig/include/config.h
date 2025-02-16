@@ -15,7 +15,7 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#define ENABLE_NLS 1
+/* #define ENABLE_NLS 1 */
 
 /* Additional font directories */
 #define FC_ADD_FONTS "yes"
@@ -24,7 +24,7 @@
 /* #undef FC_ARCHITECTURE */
 
 /* System font directory */
-#define FC_DEFAULT_FONTS "<dir>/usr/share/fonts</dir>"
+#define FC_DEFAULT_FONTS "<dir>/qt/lib/fonts</dir>"
 
 /* The type of len parameter of the gperf hash/lookup function */
 #define FC_GPERF_SIZE_T size_t
@@ -156,7 +156,7 @@
 #define HAVE_RANDOM 1
 
 /* Define to 1 if you have the `random_r' function. */
-#define HAVE_RANDOM_R 1
+/* #define HAVE_RANDOM_R 1 */
 
 /* Define to 1 if you have the `rand_r' function. */
 #define HAVE_RAND_R 1
@@ -204,7 +204,7 @@
 #define HAVE_STRUCT_STATFS_F_FLAGS 1
 
 /* Define to 1 if `f_fstypename' is a member of `struct statfs'. */
-/* #undef HAVE_STRUCT_STATFS_F_FSTYPENAME */
+#define HAVE_STRUCT_STATFS_F_FSTYPENAME 1
 
 /* Define to 1 if `f_basetype' is a member of `struct statvfs'. */
 /* #undef HAVE_STRUCT_STATVFS_F_BASETYPE */
@@ -230,7 +230,7 @@
 #define HAVE_SYS_PARAM_H 1
 
 /* Define to 1 if you have the <sys/statfs.h> header file. */
-#define HAVE_SYS_STATFS_H 1
+/* #define HAVE_SYS_STATFS_H 1 */
 
 /* Define to 1 if you have the <sys/statvfs.h> header file. */
 #define HAVE_SYS_STATVFS_H 1
@@ -242,7 +242,7 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <sys/vfs.h> header file. */
-#define HAVE_SYS_VFS_H 1
+/* #define HAVE_SYS_VFS_H 1 */
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
