@@ -6,9 +6,10 @@ gcc_toolchain("@GN_TOOLCHAIN@") {
   ld = "@CMAKE_CXX_COMPILER@"
   ar = "@CMAKE_AR@"
   nm = "@CMAKE_NM@"
-  extra_cppflags = "-isystem /usr/local/include"
-  extra_cxxflags = "-O2 -pipe -fstack-protector-strong -isystem /usr/local/include -fno-strict-aliasing  -isystem /usr/local/include "
-  extra_ldflags = " -Wl,--undefined-version -fstack-protector-strong -L/usr/local/lib "
+  extra_cppflags = "@CMAKE_CPP_FLAGS@"
+  extra_cflags = "@CMAKE_C_FLAGS@"
+  extra_cxxflags = "@CMAKE_CXX_FLAGS@"
+  extra_ldflags = "@CMAKE_LD_FLAGS@"
   toolchain_args = {
     current_os = "@GN_OS@"
     current_cpu = "@GN_CPU@"
