@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#include <cstdio>
+
 #include "base/allocator/partition_allocator/oom.h"
 
 #include "base/allocator/partition_allocator/oom_callback.h"
@@ -43,7 +45,7 @@ PA_NOINLINE void OnNoMemoryInternal(size_t size) {
 #else
   size_t tmp_size = size;
   internal::base::debug::Alias(&tmp_size);
-
+  fprintf(stderr, "Error: partition_alloc: could not allocate %zu bytes, kPoolMaxSize reached?\n", size);
   // Note: Don't add anything that may allocate here. Depending on the
   // allocator, this may be called from within the allocator (e.g. with
   // PartitionAlloc), and would deadlock as our locks are not recursive.
