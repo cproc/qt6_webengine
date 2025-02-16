@@ -406,6 +406,7 @@ bool TryRecommitSystemPagesInternal(
 }
 
 void DiscardSystemPagesInternal(uintptr_t address, size_t length) {
+#ifndef OS_GENODE
   void* ptr = reinterpret_cast<void*>(address);
 #if BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
 #if BUILDFLAG(IS_BSD)
@@ -427,6 +428,7 @@ void DiscardSystemPagesInternal(uintptr_t address, size_t length) {
   // Therefore, we just do the simple thing: MADV_DONTNEED.
   PA_PCHECK(0 == madvise(ptr, length, MADV_DONTNEED));
 #endif  // BUILDFLAG(IS_APPLE)
+#endif // OS_GENODE
 }
 
 }  // namespace partition_alloc::internal
