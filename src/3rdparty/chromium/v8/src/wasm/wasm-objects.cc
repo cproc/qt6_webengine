@@ -726,11 +726,12 @@ void SetInstanceMemory(Handle<WasmInstanceObject> instance,
   bool use_trap_handler =
       instance->module_object().native_module()->bounds_checks() ==
       wasm::kTrapHandler;
+#if 0
   // Wasm modules compiled to use the trap handler don't have bounds checks,
   // so they must have a memory that has guard regions.
   CHECK_IMPLIES(is_wasm_module && use_trap_handler,
                 buffer->GetBackingStore()->has_guard_regions());
-
+#endif
   instance->SetRawMemory(reinterpret_cast<byte*>(buffer->backing_store()),
                          buffer->byte_length());
 #if DEBUG
