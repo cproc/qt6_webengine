@@ -1129,6 +1129,9 @@ bool GetShmemTempDir(bool executable, FilePath* path) {
     *path = FilePath("/dev/shm");
     return true;
   }
+#elif defined(OS_FREEBSD)
+  *path = FilePath("/shm");
+  return true;
 #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_AIX)
   return GetTempDir(path);
 }
