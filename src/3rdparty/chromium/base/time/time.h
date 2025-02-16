@@ -1165,8 +1165,8 @@ class BASE_EXPORT ThreadTicks : public time_internal::TimeBase<ThreadTicks> {
 
   // Returns true if ThreadTicks::Now() is supported on this system.
   [[nodiscard]] static bool IsSupported() {
-#if (defined(_POSIX_THREAD_CPUTIME) && (_POSIX_THREAD_CPUTIME >= 0)) || \
-    BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA)
+#if ((defined(_POSIX_THREAD_CPUTIME) && (_POSIX_THREAD_CPUTIME >= 0)) || \
+    BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA)) && !defined(OS_GENODE)
     return true;
 #elif BUILDFLAG(IS_WIN)
     return IsSupportedWin();
