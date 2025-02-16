@@ -237,6 +237,10 @@ uintptr_t AllocPagesWithAlignOffset(
   PA_CHECK(try_length >= length);
   uintptr_t ret;
 
+#ifdef OS_GENODE
+  fprintf(stderr, "Warning: AllocPagesWithAlignOffset(): making larger allocation for requested alignment. Original size: %zu, new size: %zu\n", length, try_length);
+#endif
+
   do {
     // Continue randomizing only on POSIX.
     address = internal::kHintIsAdvisory ? GetRandomPageBase() : 0;
