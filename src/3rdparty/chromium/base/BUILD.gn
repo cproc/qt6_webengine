@@ -1642,6 +1642,7 @@ jumbo_component("base") {
       sources += [
         "process/process_metrics_posix.cc",
         "sync_socket_posix.cc",
+        "sync_socket_genode.cc",
       ]
     }
 

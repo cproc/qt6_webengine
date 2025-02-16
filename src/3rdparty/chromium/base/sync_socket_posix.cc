@@ -25,6 +25,8 @@
 #include <sys/filio.h>
 #endif
 
+#if !defined(OS_GENODE)
+
 namespace base {
 
 namespace {
@@ -222,3 +224,5 @@ bool CancelableSyncSocket::CreatePair(CancelableSyncSocket* socket_a,
 }
 
 }  // namespace base
+
+#endif /* OS_GENODE */
