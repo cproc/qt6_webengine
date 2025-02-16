@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #include "base/linux_util.h"
+#include "base/logging.h"
 
 #include <dirent.h>
 #include <errno.h>
