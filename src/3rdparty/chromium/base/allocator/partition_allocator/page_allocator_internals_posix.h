@@ -211,6 +211,9 @@ bool TrySetSystemPagesAccessInternal(
     uintptr_t address,
     size_t length,
     PageAccessibilityConfiguration accessibility) {
+#if defined(OS_GENODE)
+  return true;
+#else
 #if BUILDFLAG(ENABLE_PKEYS)
   return 0 == PkeyMprotectIfEnabled(reinterpret_cast<void*>(address), length,
                                     GetAccessFlags(accessibility),
@@ -219,12 +222,14 @@ bool TrySetSystemPagesAccessInternal(
   return 0 == PA_HANDLE_EINTR(mprotect(reinterpret_cast<void*>(address), length,
                                        GetAccessFlags(accessibility)));
 #endif
+#endif
 }
 
 void SetSystemPagesAccessInternal(
     uintptr_t address,
     size_t length,
     PageAccessibilityConfiguration accessibility) {
+#if !defined(OS_GENODE)
   int access_flags = GetAccessFlags(accessibility);
 #if BUILDFLAG(ENABLE_PKEYS)
   int ret =
@@ -252,6 +257,7 @@ void SetSystemPagesAccessInternal(
     OOM_CRASH(length);
 
   PA_PCHECK(0 == ret);
+#endif
 }
 
 void FreePagesInternal(uintptr_t address, size_t length) {
