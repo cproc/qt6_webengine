@@ -16,7 +16,7 @@
 #include "./crc32c_internal.h"
 #include "crc32c/crc32c_config.h"
 
-#if HAVE_ARM64_CRC32C
+#if HAVE_ARM64_CRC32C && 0
 
 #include <arm_acle.h>
 #include <arm_neon.h>
