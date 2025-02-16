@@ -329,8 +329,12 @@ std::unique_ptr<BackingStore> BackingStore::TryAllocateAndPartiallyCommitMemory(
   TRACE_BS("BSw:try   %zu pages, %zu max\n", initial_pages, maximum_pages);
 
 #if V8_ENABLE_WEBASSEMBLY
+#if 0
   bool guards = wasm_memory == WasmMemoryFlag::kWasmMemory32 &&
                 trap_handler::IsTrapHandlerEnabled();
+#else
+  bool guards = false;
+#endif
 #else
   CHECK_EQ(WasmMemoryFlag::kNotWasm, wasm_memory);
   constexpr bool guards = false;
