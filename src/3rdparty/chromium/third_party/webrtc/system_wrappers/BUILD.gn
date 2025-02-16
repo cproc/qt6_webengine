@@ -64,8 +64,6 @@ rtc_library("system_wrappers") {
     if (!build_with_chromium) {
       sources += [ "source/cpu_features_linux.cc" ]
     }
-
-    libs += [ "rt" ]
   }
 
   if (is_win) {
