@@ -1731,7 +1731,7 @@ if (is_linux || is_chromeos) {
       if (is_linux) {
         deps += [ ":swiftshader_vk_symbols" ]
       }
-      if (!is_chromeos) {
+      if (!is_chromeos && !is_freebsd) {
         deps += [ ":angle_libvulkan_symbols" ]
       }
       if (build_with_internal_optimization_guide) {
@@ -1798,7 +1798,7 @@ if (is_linux || is_chromeos) {
 
       deps = [ "//third_party/angle:libGLESv2" ]
     }
-    if (!is_chromeos) {
+    if (!is_chromeos && !is_freebsd) {
       extract_symbols("angle_libvulkan_symbols") {
         binary = "$root_out_dir/libvulkan.so.1"
 
