@@ -413,7 +413,7 @@ foreach(arch ${archs})
                 use_cups=false
                 use_gio=false
                 use_gnome_keyring=false
-                use_bundled_fontconfig=false
+                use_bundled_fontconfig=true
                 use_glib=false
                 use_bluez=false
                 use_udev=false
