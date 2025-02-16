@@ -9,7 +9,7 @@ import("//build/config/dcheck_always_on.gni")
 declare_args() {
   # Use LogErrorNotReached() for NOTREACHED().
   enable_log_error_not_reached =
-      is_chromeos_ash && !(is_debug || dcheck_always_on)
+      (is_chromeos_ash && !(is_debug || dcheck_always_on)) || true
   enable_stack_trace_line_numbers = false
 
   # Use runtime vlog everywhere except for ash-chrome.
