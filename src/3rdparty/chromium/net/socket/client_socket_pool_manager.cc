@@ -31,8 +31,13 @@ namespace {
 
 // Limit of sockets of each socket pool.
 int g_max_sockets_per_pool[] = {
+#if 0
   256,  // NORMAL_SOCKET_POOL
   256   // WEBSOCKET_SOCKET_POOL
+#else
+   60,  // NORMAL_SOCKET_POOL
+   40   // WEBSOCKET_SOCKET_POOL
+#endif
 };
 
 static_assert(std::size(g_max_sockets_per_pool) ==
