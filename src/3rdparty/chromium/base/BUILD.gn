@@ -2134,9 +2134,10 @@ jumbo_component("base") {
       "profiler/thread_delegate_posix.h",
     ]
     sources += [
-      "files/file_path_watcher_kqueue.cc",
-      "files/file_path_watcher_kqueue.h",
-      "files/file_path_watcher_bsd.cc",
+#      "files/file_path_watcher_kqueue.cc",
+#      "files/file_path_watcher_kqueue.h",
+#      "files/file_path_watcher_bsd.cc",
+      "files/file_path_watcher_stub.cc",
     ]
   }
 
