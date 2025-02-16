@@ -71,6 +71,8 @@ bool GetPCIDevicesWithLibPCI(std::vector<GPUDeviceInfo> *devices)
 
 bool GetSystemInfo(SystemInfo *info)
 {
+	return false;
+#if 0
 #if defined(__OpenBSD__) || defined(__FreeBSD__)
     if (!CollectMesaCardInfo(&(info->gpus)))
     {
@@ -163,6 +165,7 @@ bool GetSystemInfo(SystemInfo *info)
     }
 
     return true;
+#endif
 }
 
 }  // namespace angle
