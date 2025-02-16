@@ -228,7 +228,7 @@ config("default_libs") {
       "pthread",
       "rt",
     ]
-  } else if (is_bsd) {
+  } else if (is_bsd && false) {
     libs = [
       "pthread",
     ]
