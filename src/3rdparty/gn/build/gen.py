@@ -503,7 +503,7 @@ def WriteGNNinja(path, platform, host, options, args_list):
       cflags.extend(['-Wrange-loop-analysis', '-Wextra-semi-stmt'])
 
     if platform.is_linux() or platform.is_mingw() or platform.is_msys():
-      ldflags.append('-Wl,--as-needed')
+      #ldflags.append('-Wl,--as-needed')
 
       if not options.no_static_libstdcpp:
         ldflags.append('-static-libstdc++')
