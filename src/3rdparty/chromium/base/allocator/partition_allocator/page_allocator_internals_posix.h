@@ -261,7 +261,12 @@ void SetSystemPagesAccessInternal(
 }
 
 void FreePagesInternal(uintptr_t address, size_t length) {
+#if defined(OS_GENODE)
+  /* don't crash on partial unmap attempts */
+  munmap(reinterpret_cast<void*>(address), length);
+#else
   PA_PCHECK(0 == munmap(reinterpret_cast<void*>(address), length));
+#endif
 }
 
 uintptr_t TrimMappingInternal(uintptr_t base_address,
@@ -274,12 +279,16 @@ uintptr_t TrimMappingInternal(uintptr_t base_address,
   // We can resize the allocation run. Release unneeded memory before and after
   // the aligned range.
   if (pre_slack) {
+#if !defined(OS_GENODE)
     FreePages(base_address, pre_slack);
+#endif
     ret = base_address + pre_slack;
   }
+#if !defined(OS_GENODE)
   if (post_slack) {
     FreePages(ret + trim_length, post_slack);
   }
+#endif
   return ret;
 }
 

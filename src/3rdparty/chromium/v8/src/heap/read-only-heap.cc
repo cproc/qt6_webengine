@@ -182,7 +182,10 @@ void SoleReadOnlyHeap::InitializeFromIsolateRoots(Isolate* isolate) {
 
 void ReadOnlyHeap::InitFromIsolate(Isolate* isolate) {
   DCHECK(roots_init_complete_);
+#ifndef V8_OS_GENODE
+  /* shrinking of pages via partial munmap() is currently not supported on Genode */
   read_only_space_->ShrinkPages();
+#endif
   if (IsReadOnlySpaceShared()) {
     std::shared_ptr<ReadOnlyArtifacts> artifacts(
         *read_only_artifacts_.Pointer());
