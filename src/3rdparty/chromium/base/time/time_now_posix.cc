@@ -127,6 +127,9 @@ bool TimeTicks::IsConsistentAcrossProcesses() {
 
 namespace subtle {
 ThreadTicks ThreadTicksNowIgnoringOverride() {
+#if defined(OS_GENODE)
+  return ThreadTicks();
+#else
 #if (defined(_POSIX_THREAD_CPUTIME) && (_POSIX_THREAD_CPUTIME >= 0)) || \
     BUILDFLAG(IS_ANDROID)
   return ThreadTicks() + Microseconds(ClockNow(CLOCK_THREAD_CPUTIME_ID));
@@ -134,6 +137,7 @@ ThreadTicks ThreadTicksNowIgnoringOverride() {
   NOTREACHED();
   return ThreadTicks();
 #endif
+#endif /* OS_GENODE */
 }
 }  // namespace subtle
 
