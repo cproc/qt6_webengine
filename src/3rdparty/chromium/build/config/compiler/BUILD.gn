@@ -2855,7 +2855,7 @@ config("no_symbols") {
     # All configs using /DEBUG should include this:
     configs = [ ":win_pdbaltpath" ]
   } else {
-    cflags = [ "-g0" ]
+    cflags = [ "-g2" ]
     asmflags = cflags
   }
 }
