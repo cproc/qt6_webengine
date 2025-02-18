@@ -500,7 +500,12 @@ size_t GetDefaultThreadStackSize(const pthread_attr_t& attributes) {
   // Other libcs (uclibc, musl, etc) tend to use smaller stacks, often too small
   // for chromium. Make sure we have enough space to work with here. Note that
   // for comparison glibc stacks are generally around 8MB.
+#if defined(OS_GENODE)
+  /* maximum supported stack size, see pthread.cc */
+  return (1 * (1 << 20)) - (4 * 4096);
+#else
   return 2 * (1 << 20);
+#endif
 #else
   // ThreadSanitizer bloats the stack heavily. Evidence has been that the
   // default stack size isn't enough for some browser tests.
