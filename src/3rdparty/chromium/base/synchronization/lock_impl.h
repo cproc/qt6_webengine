@@ -104,7 +104,7 @@ void LockImpl::Unlock() {
 }
 
 #elif BUILDFLAG(IS_POSIX) || BUILDFLAG(IS_FUCHSIA)
-#if BUILDFLAG(IS_FREEBSD)
+#if BUILDFLAG(IS_FREEBSD) && !BUILDFLAG(IS_GENODE)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wthread-safety-analysis"
 #endif
@@ -128,7 +128,7 @@ void LockImpl::Unlock() {
   dcheck_unlock_result(rv);
 #endif
 }
-#if BUILDFLAG(IS_FREEBSD)
+#if BUILDFLAG(IS_FREEBSD) && !BUILDFLAG(IS_GENODE)
 #pragma GCC diagnostic pop
 #endif
 #endif
