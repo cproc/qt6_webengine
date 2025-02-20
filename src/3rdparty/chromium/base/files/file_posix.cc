@@ -89,6 +89,8 @@ short FcntlFlockType(absl::optional<File::LockMode> mode) {
 
 File::Error CallFcntlFlock(PlatformFile file,
                            absl::optional<File::LockMode> mode) {
+#if !BUILDFLAG(IS_GENODE)
+  /* file locking is currently not implemented on Genode */
   struct flock lock;
   lock.l_type = FcntlFlockType(std::move(mode));
   lock.l_whence = SEEK_SET;
@@ -96,6 +98,7 @@ File::Error CallFcntlFlock(PlatformFile file,
   lock.l_len = 0;  // Lock entire file.
   if (HANDLE_EINTR(fcntl(file, F_SETLK, &lock)) == -1)
     return File::GetLastFileError();
+#endif
   return File::FILE_OK;
 }
 #endif
