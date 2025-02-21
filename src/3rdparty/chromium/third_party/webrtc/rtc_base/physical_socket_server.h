@@ -12,7 +12,7 @@
 #define RTC_BASE_PHYSICAL_SOCKET_SERVER_H_
 
 #include "api/units/time_delta.h"
-#if defined(WEBRTC_POSIX) && defined(WEBRTC_LINUX)
+#if defined(WEBRTC_POSIX) && defined(WEBRTC_LINUX) && !defined(WEBRTC_BSD)
 #include <sys/epoll.h>
 #define WEBRTC_USE_EPOLL 1
 #endif

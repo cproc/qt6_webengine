@@ -53,7 +53,7 @@
 #if V8_OS_DARWIN
 #include <mach/mach.h>
 #include <malloc/malloc.h>
-#else
+#elif !V8_OS_BSD
 #include <malloc.h>
 #endif
 
@@ -67,11 +67,11 @@
 #include <sys/resource.h>
 #endif
 
-#if !defined(_AIX) && !defined(V8_OS_FUCHSIA)
+#if !defined(_AIX) && !defined(V8_OS_FUCHSIA) && 0
 #include <sys/syscall.h>
 #endif
 
-#if V8_OS_FREEBSD || V8_OS_DARWIN || V8_OS_OPENBSD || V8_OS_SOLARIS
+#if V8_OS_FREEBSD || V8_OS_DARWIN || V8_OS_BSD || V8_OS_SOLARIS
 #define MAP_ANONYMOUS MAP_ANON
 #endif
 
@@ -297,6 +297,13 @@ void OS::SetRandomMmapSeed(int64_t seed) {
   }
 }
 
+#if V8_OS_OPENBSD
+// Allow OpenBSD's mmap to select a random address on OpenBSD 
+// static
+void* OS::GetRandomMmapAddr() {
+  return nullptr;
+}
+#else
 // static
 void* OS::GetRandomMmapAddr() {
   uintptr_t raw_addr;
@@ -393,6 +400,7 @@ void* OS::GetRandomMmapAddr() {
 #endif
   return reinterpret_cast<void*>(raw_addr);
 }
+#endif
 
 // TODO(bbudge) Move Cygwin and Fuchsia stuff into platform-specific files.
 #if !V8_OS_CYGWIN && !V8_OS_FUCHSIA
@@ -470,6 +478,24 @@ void OS::Release(void* address, size_t size) {
   DCHECK_EQ(0, size % CommitPageSize());
   CHECK_EQ(0, munmap(address, size));
 }
+
+#if defined(V8_OS_GENODE)
+
+#include <libc/genode.h>
+
+extern "C" int mprotect(void *addr, ::size_t len, int prot)
+{
+	/*
+	 * At least flush the cache for the area if it is to be made executable.
+	 * This is usually done by the Linux kernel and probably needed for ARM.
+	 */
+
+	if (prot & PROT_EXEC)
+		genode_cache_coherent(addr, len);
+
+	return 0;
+}
+#endif /* OS_GENODE */
 
 // static
 bool OS::SetPermissions(void* address, size_t size, MemoryPermission access) {
@@ -661,7 +687,7 @@ void OS::DestroySharedMemoryHandle(PlatformSharedMemoryHandle handle) {
 
 // static
 bool OS::HasLazyCommits() {
-#if V8_OS_AIX || V8_OS_LINUX || V8_OS_DARWIN
+#if V8_OS_AIX || V8_OS_LINUX || V8_OS_DARWIN || V8_OS_BSD
   return true;
 #else
   // TODO(bbudge) Return true for all POSIX platforms.
@@ -1238,7 +1264,7 @@ void Thread::SetThreadLocal(LocalStorageKey key, void* value) {
 // keep this version in POSIX as most Linux-compatible derivatives will
 // support it. MacOS and FreeBSD are different here.
 #if !defined(V8_OS_FREEBSD) && !defined(V8_OS_DARWIN) && !defined(_AIX) && \
-    !defined(V8_OS_SOLARIS)
+    !defined(V8_OS_SOLARIS) && !defined(V8_OS_OPENBSD)
 
 // static
 Stack::StackSlot Stack::GetStackStart() {

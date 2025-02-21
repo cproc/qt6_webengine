@@ -150,7 +150,13 @@ COLD int dav1d_open(Dav1dContext **const c_out, const Dav1dSettings *const s) {
 
     pthread_attr_t thread_attr;
     if (pthread_attr_init(&thread_attr)) return DAV1D_ERR(ENOMEM);
+
+#ifdef __GENODE__
+    /* maximum supported stack size, see pthread.cc */
+    size_t stack_size = 1024 * 1024 - (4 * 4096);
+#else
     size_t stack_size = 1024 * 1024 + get_stack_size_internal(&thread_attr);
+#endif
 
     pthread_attr_setstacksize(&thread_attr, stack_size);
 

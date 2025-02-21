@@ -264,9 +264,30 @@ source_set("audio") {
     ]
   }
 
-  if (is_linux || is_chromeos) {
+  if (use_oss) {
+    sources += [
+      "genode/audio_manager_genode.cc",
+      "oss/oss_input.cc",
+      "oss/oss_input.h",
+      "oss/oss_output.cc",
+      "oss/oss_output.h"
+    ]
+  }
+
+  if ((is_linux || is_chromeos) && !use_sndio && !use_oss) {
     sources += [ "linux/audio_manager_linux.cc" ]
   }
+
+  if (use_sndio) {
+    libs += [ "sndio" ]
+    sources += [
+      "sndio/audio_manager_sndio.cc",
+      "sndio/sndio_input.cc",
+      "sndio/sndio_input.h",
+      "sndio/sndio_output.cc",
+      "sndio/sndio_output.h"
+    ]
+   }
 
   if (use_alsa) {
     libs += [ "asound" ]

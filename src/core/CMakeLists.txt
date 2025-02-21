@@ -20,7 +20,7 @@ add_subdirectory(tools)
 #   TOOLCHAIN SETUP
 ##
 
-if(LINUX)
+if(LINUX OR FREEBSD)
     setup_toolchains()
 endif()
 
@@ -406,17 +406,17 @@ foreach(arch ${archs})
             CONDITION QT_FEATURE_webengine_embedded_build
         )
 
-        if(LINUX)
+        if(LINUX OR FREEBSD)
             list(APPEND gnArgArg
                 use_gtk=false # GTK toolkit bindings
                 use_qt=false # Qt5 toolkit bindings
                 use_cups=false
                 use_gio=false
                 use_gnome_keyring=false
-                use_bundled_fontconfig=false
+                use_bundled_fontconfig=true
                 use_glib=false
                 use_bluez=false
-                use_udev=true
+                use_udev=false
                 is_cfi=false
                 use_ozone=true
                 ozone_auto_platforms=false
@@ -475,6 +475,10 @@ foreach(arch ${archs})
             extend_gn_list(gnArgArg
                 ARGS use_pulseaudio
                 CONDITION QT_FEATURE_webengine_system_pulseaudio
+            )
+            extend_gn_list(gnArgArg
+                ARGS use_sndio
+                CONDITION QT_FEATURE_webengine_system_sndio
             )
             extend_gn_list(gnArgArg
                 ARGS use_vaapi

@@ -25,7 +25,7 @@ if (is_fuchsia) {
   import("//build/sdk/sdk_documentation.gni")
 }
 
-if (!is_android) {
+if (!is_android && !is_freebsd) {
   vulkan_undefine_configs = []
 }
 if (is_win) {
@@ -59,7 +59,7 @@ config("vulkan_internal_config") {
     defines += [
       "SYSCONFDIR=\"/etc\"",
       "FALLBACK_CONFIG_DIRS=\"/etc/xdg\"",
-      "FALLBACK_DATA_DIRS=\"/usr/local/share:/usr/share\"",
+      "FALLBACK_DATA_DIRS=\"/usr/X11R6/share:/usr/local/share:/usr/share\"",
     ]
   }
 }
@@ -89,7 +89,7 @@ config("vulkan_loader_config") {
   }
 }
 
-if (!is_android) {
+if (!is_android && !is_freebsd) {
   if (is_fuchsia) {
     library_type = "sdk_shared_library"
   } else if (vulkan_loader_shared) {

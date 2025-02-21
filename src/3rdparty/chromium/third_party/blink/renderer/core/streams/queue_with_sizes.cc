@@ -15,7 +15,7 @@ namespace {
 
 // https://streams.spec.whatwg.org/#is-finite-non-negative-number
 bool IsFiniteNonNegativeNumber(double v) {
-  return isfinite(v) && v >= 0;
+  return std::isfinite(v) && v >= 0;
 }
 
 }  // namespace

@@ -187,6 +187,14 @@ uintptr_t SystemAllocPagesInternal(uintptr_t hint,
   }
 #endif
 
+#if defined(OS_GENODE)
+  /*
+   * The access type cannot be changed later with 'mprotect()' on Genode,
+   * but some memory needs to be executable.
+   */
+  access_flag |= PROT_EXEC;
+#endif
+
   void* ret = mmap(reinterpret_cast<void*>(hint), length, access_flag,
                    map_flags, fd, 0);
   if (ret == MAP_FAILED) {
@@ -211,6 +219,9 @@ bool TrySetSystemPagesAccessInternal(
     uintptr_t address,
     size_t length,
     PageAccessibilityConfiguration accessibility) {
+#if defined(OS_GENODE)
+  return true;
+#else
 #if BUILDFLAG(ENABLE_PKEYS)
   return 0 == PkeyMprotectIfEnabled(reinterpret_cast<void*>(address), length,
                                     GetAccessFlags(accessibility),
@@ -219,12 +230,14 @@ bool TrySetSystemPagesAccessInternal(
   return 0 == PA_HANDLE_EINTR(mprotect(reinterpret_cast<void*>(address), length,
                                        GetAccessFlags(accessibility)));
 #endif
+#endif
 }
 
 void SetSystemPagesAccessInternal(
     uintptr_t address,
     size_t length,
     PageAccessibilityConfiguration accessibility) {
+#if !defined(OS_GENODE)
   int access_flags = GetAccessFlags(accessibility);
 #if BUILDFLAG(ENABLE_PKEYS)
   int ret =
@@ -252,10 +265,16 @@ void SetSystemPagesAccessInternal(
     OOM_CRASH(length);
 
   PA_PCHECK(0 == ret);
+#endif
 }
 
 void FreePagesInternal(uintptr_t address, size_t length) {
+#if defined(OS_GENODE)
+  /* don't crash on partial unmap attempts */
+  munmap(reinterpret_cast<void*>(address), length);
+#else
   PA_PCHECK(0 == munmap(reinterpret_cast<void*>(address), length));
+#endif
 }
 
 uintptr_t TrimMappingInternal(uintptr_t base_address,
@@ -268,12 +287,16 @@ uintptr_t TrimMappingInternal(uintptr_t base_address,
   // We can resize the allocation run. Release unneeded memory before and after
   // the aligned range.
   if (pre_slack) {
+#if !defined(OS_GENODE)
     FreePages(base_address, pre_slack);
+#endif
     ret = base_address + pre_slack;
   }
+#if !defined(OS_GENODE)
   if (post_slack) {
     FreePages(ret + trim_length, post_slack);
   }
+#endif
   return ret;
 }
 
@@ -329,9 +352,13 @@ void DecommitAndZeroSystemPagesInternal(uintptr_t address, size_t length) {
   // new mapping is established." As a consequence, the memory will be
   // zero-initialized on next access.
   void* ptr = reinterpret_cast<void*>(address);
+#ifdef OS_GENODE
+  memset(ptr, 0, length);
+#else
   void* ret = mmap(ptr, length, PROT_NONE,
                    MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
   PA_CHECK(ptr == ret);
+#endif
 }
 
 void RecommitSystemPagesInternal(
@@ -379,9 +406,14 @@ bool TryRecommitSystemPagesInternal(
 }
 
 void DiscardSystemPagesInternal(uintptr_t address, size_t length) {
+#ifndef OS_GENODE
   void* ptr = reinterpret_cast<void*>(address);
-#if BUILDFLAG(IS_APPLE)
+#if BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
+#if BUILDFLAG(IS_BSD)
+  int ret = madvise(ptr, length, MADV_FREE);
+#else
   int ret = madvise(ptr, length, MADV_FREE_REUSABLE);
+#endif
   if (ret) {
     // MADV_FREE_REUSABLE sometimes fails, so fall back to MADV_DONTNEED.
     ret = madvise(ptr, length, MADV_DONTNEED);
@@ -396,6 +428,7 @@ void DiscardSystemPagesInternal(uintptr_t address, size_t length) {
   // Therefore, we just do the simple thing: MADV_DONTNEED.
   PA_PCHECK(0 == madvise(ptr, length, MADV_DONTNEED));
 #endif  // BUILDFLAG(IS_APPLE)
+#endif // OS_GENODE
 }
 
 }  // namespace partition_alloc::internal

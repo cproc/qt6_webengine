@@ -397,7 +397,9 @@ bool DiscardableSharedMemory::Purge(Time current_time) {
 // Note: this memory will not be accessed again.  The segment will be
 // freed asynchronously at a later time, so just do the best
 // immediately.
-#if BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_NACL)
+#if BUILDFLAG(IS_GENODE)
+/* madvise() is currently not implemented on Genode */
+#elif BUILDFLAG(IS_POSIX) && !BUILDFLAG(IS_NACL)
 // Linux and Android provide MADV_REMOVE which is preferred as it has a
 // behavior that can be verified in tests. Other POSIX flavors (MacOSX, BSDs),
 // provide MADV_FREE which has the same result but memory is purged lazily.

@@ -303,14 +303,24 @@ void SharedMutex::UnlockExclusive() {
 
 bool SharedMutex::TryLockShared() {
   DCHECK(SharedMutexNotHeld(this));
+#ifdef V8_OS_GENODE
+  /* pthread_rwlock_tryrdlock() is currently not implemented */
+  bool result = false;
+#else
   bool result = pthread_rwlock_tryrdlock(&native_handle_) == 0;
+#endif
   if (result) DCHECK(TryHoldSharedMutex(this));
   return result;
 }
 
 bool SharedMutex::TryLockExclusive() {
   DCHECK(SharedMutexNotHeld(this));
+#ifdef V8_OS_GENODE
+  /* pthread_rwlock_trywrlock() is currently not implemented */
+  bool result = false;
+#else
   bool result = pthread_rwlock_trywrlock(&native_handle_) == 0;
+#endif
   if (result) DCHECK(TryHoldSharedMutex(this));
   return result;
 }

@@ -53,7 +53,7 @@ const char kManifestV2Availability[] = "extensions.manifest_v2";
 const char kPinnedExtensions[] = "extensions.pinned_extensions";
 const char kStorageGarbageCollect[] = "extensions.storage.garbagecollect";
 #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
-    BUILDFLAG(IS_FUCHSIA)
+    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
 extern const char kChromeAppsEnabled[] = "extensions.chrome_apps_enabled";
 #endif
 const char kChromeAppsWebViewPermissiveBehaviorAllowed[] =

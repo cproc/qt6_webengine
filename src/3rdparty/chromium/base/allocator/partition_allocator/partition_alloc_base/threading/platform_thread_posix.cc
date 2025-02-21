@@ -17,8 +17,10 @@
 #include "base/allocator/partition_allocator/partition_alloc_base/threading/platform_thread_internal_posix.h"
 #include "build/build_config.h"
 
-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+#if BUILDFLAG(IS_LINUX)
 #include <sys/syscall.h>
+#endif
 #include <atomic>
 #endif
 

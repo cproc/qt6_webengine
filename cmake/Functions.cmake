@@ -416,7 +416,7 @@ function(add_linker_options target buildDir completeStatic)
     set(libs_rsp "${buildDir}/${ninjaTarget}_libs.rsp")
     set(ldir_rsp "${buildDir}/${ninjaTarget}_ldir.rsp")
     set_target_properties(${cmakeTarget} PROPERTIES STATIC_LIBRARY_OPTIONS "@${objects_rsp}")
-    if(LINUX OR ANDROID)
+    if(LINUX OR ANDROID OR FREEBSD)
          get_gn_arch(cpu ${TEST_architecture_arch})
          if(CMAKE_CROSSCOMPILING AND cpu STREQUAL "arm" AND ${config} STREQUAL "Debug")
              target_link_options(${cmakeTarget} PRIVATE "LINKER:--long-plt")
@@ -616,16 +616,17 @@ endfunction()
 # Function maps TEST_architecture_arch or CMAKE_SYSTEM_PROCESSOR into gn architecture
 function(get_gn_arch result arch)
     set(armList arm armv7-a)
+    set(arm64List arm64 ARM64 aarch64)
     set(mips64List mips64 mipsel64)
     set(x86List i386 i686)
-    set(x64List x86_64 AMD64 x86_64h aarch64)
+    set(x64List x86_64 AMD64 x86_64h)
     if(arch IN_LIST x86List)
         set(${result} "x86" PARENT_SCOPE)
     elseif(arch IN_LIST x64List)
         set(${result} "x64" PARENT_SCOPE)
     elseif(arch IN_LIST armList)
         set(${result} "arm" PARENT_SCOPE)
-    elseif(arch STREQUAL "arm64")
+    elseif(arch IN_LIST arm64List)
         set(${result} "arm64" PARENT_SCOPE)
     elseif(arch STREQUAL "mipsel")
         set(${result} "mipsel" PARENT_SCOPE)
@@ -673,6 +674,8 @@ function(get_gn_os result)
         set(${result} "mac" PARENT_SCOPE)
     elseif(IOS)
         set(${result} "ios" PARENT_SCOPE)
+    elseif(FREEBSD)
+        set(${result} "freebsd" PARENT_SCOPE)
     else()
         message(DEBUG "Unrecognized OS")
     endif()
@@ -865,7 +868,7 @@ macro(append_build_type_setup)
 
     extend_gn_list(gnArgArg
         ARGS enable_precompiled_headers
-        CONDITION BUILD_WITH_PCH AND NOT LINUX
+        CONDITION BUILD_WITH_PCH AND NOT LINUX AND NOT FREEBSD
     )
     extend_gn_list(gnArgArg
         ARGS dcheck_always_on
@@ -917,7 +920,7 @@ macro(append_compiler_linker_sdk_setup)
                 use_libcxx=true
             )
         endif()
-        if(DEFINED QT_FEATURE_stdlib_libcpp AND LINUX)
+        if(DEFINED QT_FEATURE_stdlib_libcpp AND (LINUX OR FREEBSD))
             extend_gn_list(gnArgArg ARGS use_libcxx
                 CONDITION QT_FEATURE_stdlib_libcpp
             )
@@ -955,7 +958,7 @@ macro(append_compiler_linker_sdk_setup)
         )
     endif()
     get_gn_arch(cpu ${TEST_architecture_arch})
-    if(LINUX AND CMAKE_CROSSCOMPILING AND cpu STREQUAL "arm")
+    if((LINUX OR FREEBSD) AND CMAKE_CROSSCOMPILING AND cpu STREQUAL "arm")
 
         extend_gn_list_cflag(gnArgArg
             ARG arm_tune
@@ -1040,8 +1043,9 @@ macro(append_toolchain_setup)
                 host_cpu="${cpu}"
             )
         endif()
-    elseif(LINUX)
+    elseif(LINUX OR FREEBSD)
         get_gn_arch(cpu ${TEST_architecture_arch})
+        get_gn_os(os)
         list(APPEND gnArgArg
             custom_toolchain="${buildDir}/target_toolchain:target"
             host_toolchain="${buildDir}/host_toolchain:host"
@@ -1050,6 +1054,7 @@ macro(append_toolchain_setup)
             list(APPEND gnArgArg
                 v8_snapshot_toolchain="${buildDir}/v8_toolchain:v8"
                 target_cpu="${cpu}"
+                target_os="${os}"
             )
         else()
             list(APPEND gnArgArg host_cpu="${cpu}")
@@ -1073,7 +1078,7 @@ endmacro()
 
 
 macro(append_pkg_config_setup)
-    if(LINUX)
+    if(LINUX OR FREEBSD)
         list(APPEND gnArgArg
             pkg_config="${PKG_CONFIG_EXECUTABLE}"
             host_pkg_config="${PKG_CONFIG_HOST_EXECUTABLE}"
@@ -1098,6 +1103,7 @@ function(add_ninja_command)
         COMMENT "Running ninja for ${arg_TARGET} in ${arg_BUILDDIR}"
         COMMAND Ninja::ninja
             ${NINJAFLAGS}
+            -v
             -C ${arg_BUILDDIR}
             ${arg_TARGET}
         USES_TERMINAL
@@ -1166,6 +1172,20 @@ function(add_gn_build_artifacts_to_target)
             set_target_properties(${arg_CMAKE_TARGET} PROPERTIES
                 LINK_DEPENDS ${arg_BUILDDIR}/${config}/${arch}/${arg_NINJA_STAMP}
             )
+            # For some reason when the build of QtWebEngine's "convert_dict" is
+            # completed the "convert_dict.stamp" isn't created.
+            #
+            # Work around this issue by creating "convert_dict.stamp" manually.
+            if(${arg_NINJA_TARGET} STREQUAL "convert_dict")
+                add_custom_command(
+                    POST_BUILD
+                    COMMENT "Add workaround for missing ${arg_NINJA_TARGET}.stamp file after build"
+                    COMMAND ${CMAKE_COMMAND} -E touch ${buildDir}/${config}/${arch}/${arg_NINJA_TARGET}.stamp
+                    TARGET ${target}
+                    DEPENDS run_${module}_NinjaDone
+                    USES_TERMINAL
+            )
+            endif()
             if(QT_IS_MACOS_UNIVERSAL)
                 add_intermediate_archive(${target} ${arg_BUILDDIR}/${config}/${arch} ${arg_COMPLETE_STATIC})
             elseif(IOS)
@@ -1283,7 +1303,7 @@ endfunction()
 
 function(check_for_ulimit)
     message("-- Checking 'ulimit -n'")
-    execute_process(COMMAND bash -c "ulimit -n"
+    execute_process(COMMAND sh -c "ulimit -n"
         OUTPUT_VARIABLE ulimitOutput
     )
     string(REGEX MATCHALL "[0-9]+" limit "${ulimitOutput}")
@@ -1292,7 +1312,7 @@ function(check_for_ulimit)
         if(NOT ${CMAKE_VERSION} VERSION_LESS "3.21.0")
             message(" -- Creating linker launcher")
             file(GENERATE OUTPUT ${PROJECT_BINARY_DIR}/linker_ulimit.sh
-                CONTENT "#!/bin/bash\nulimit -n 4096\nexec \"$@\""
+                CONTENT "#!/bin/sh\nulimit -n 4096\nexec \"$@\""
                 FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
             )
             set(COIN_BUG_699 ON PARENT_SCOPE)

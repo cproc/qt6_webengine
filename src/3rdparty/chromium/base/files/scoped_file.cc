@@ -14,6 +14,10 @@
 #include "base/posix/eintr_wrapper.h"
 #endif
 
+#if defined(OS_GENODE)
+#include "base/sync_socket.h"
+#endif
+
 namespace base {
 namespace internal {
 
@@ -28,10 +32,25 @@ void ScopedFDCloseTraits::Free(int fd) {
   // Chrome relies on being able to "drop" such access.
   // It's especially problematic on Linux with the setuid sandbox, where
   // a single open directory would bypass the entire security model.
-  int ret = IGNORE_EINTR(close(fd));
+
+  int ret;
+
+#if defined(OS_GENODE)
+  if (fd <= 1023) {
+#endif
+
+  ret = IGNORE_EINTR(close(fd));
+
+#if defined(OS_GENODE)
+  } else {
+    /* SyncSocket */
+    ret = IGNORE_EINTR(close(SYNC_SOCKET_GENODE_READ_FD(fd))) |
+          IGNORE_EINTR(close(SYNC_SOCKET_GENODE_WRITE_FD(fd)));
+  }
+#endif
 
 #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_APPLE) || \
-    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID)
+    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_BSD)
   // NB: Some file descriptors can return errors from close() e.g. network
   // filesystems such as NFS and Linux input devices. On Linux, macOS, and
   // Fuchsia's POSIX layer, errors from close other than EBADF do not indicate

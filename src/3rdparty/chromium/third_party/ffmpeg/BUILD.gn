@@ -11,7 +11,7 @@ import("//build/config/sanitizers/sanitizers.gni")
 
 # Path to platform configuration files.
 platform_config_root =
-    "chromium/config/$ffmpeg_branding/$os_config/$ffmpeg_arch"
+    "chromium/config/$ffmpeg_branding/linux/$ffmpeg_arch"
 
 has_nasm_deps =
     ffmpeg_asm_sources != [] &&
@@ -330,7 +330,7 @@ target(link_target_type, "ffmpeg_internal") {
     ]
     cflags += [
       "-std=c99",
-      "-pthread",
+      #"-pthread",
       "-fno-math-errno",
       "-fno-signed-zeros",
       "-fno-tree-vectorize",
@@ -339,7 +339,7 @@ target(link_target_type, "ffmpeg_internal") {
       "-L",
       rebase_path(target_gen_dir, root_build_dir),
     ]
-    if (!is_android && !is_fuchsia) {
+    if (!is_android && !is_fuchsia && false) {
       # OS=android requires that both -lz and -lm occur after
       # -lc++_shared on the link command line. Android link rules
       # already include -lm, and we get -lz as a transitive dependency

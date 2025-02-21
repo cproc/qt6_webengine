@@ -124,7 +124,7 @@ declare_args() {
   v8_enable_verify_csa = false
 
   # Enable pointer compression (sets -dV8_COMPRESS_POINTERS).
-  v8_enable_pointer_compression = ""
+  v8_enable_pointer_compression = false
   v8_enable_pointer_compression_shared_cage = ""
   v8_enable_31bit_smis_on_64bit_arch = false
 
@@ -289,8 +289,8 @@ declare_args() {
 
   # Enable heap reservation of size 4GB. Only possible for 64bit archs.
   cppgc_enable_caged_heap =
-      v8_current_cpu == "x64" || v8_current_cpu == "arm64" ||
-      v8_current_cpu == "loong64"
+      (v8_current_cpu == "x64" || v8_current_cpu == "arm64" ||
+      v8_current_cpu == "loong64") && false
 
   # Enables additional heap verification phases and checks.
   cppgc_enable_verify_heap = ""
@@ -1305,6 +1305,14 @@ config("toolchain") {
   } else if (target_os == "chromeos") {
     defines += [ "V8_HAVE_TARGET_OS" ]
     defines += [ "V8_TARGET_OS_CHROMEOS" ]
+  } else if (target_os == "openbsd") {
+    defines += [ "V8_HAVE_TARGET_OS" ]
+    defines += [ "V8_TARGET_OS_OPENBSD" ]
+    defines += [ "V8_TARGET_OS_BSD" ]
+  } else if (target_os == "freebsd") {
+    defines += [ "V8_HAVE_TARGET_OS" ]
+    defines += [ "V8_TARGET_OS_FREEBSD" ]
+    defines += [ "V8_TARGET_OS_BSD" ]
   }
 
   # TODO(infra): Support v8_enable_prof on Windows.
@@ -5777,7 +5785,7 @@ v8_component("v8_libbase") {
     }
   }
 
-  if (is_linux || is_chromeos) {
+  if ((is_linux || is_chromeos) && !is_bsd) {
     sources += [
       "src/base/debug/stack_trace_posix.cc",
       "src/base/platform/platform-linux.cc",
@@ -5788,6 +5796,18 @@ v8_component("v8_libbase") {
       "dl",
       "rt",
     ]
+  } else if (is_openbsd) {
+    sources += [
+      "src/base/debug/stack_trace_posix.cc",
+      "src/base/platform/platform-openbsd.cc",
+    ]
+    libs = [ "execinfo" ]
+  } else if (is_freebsd) {
+    sources += [
+      "src/base/debug/stack_trace_posix.cc",
+      "src/base/platform/platform-freebsd.cc",
+    ]
+#    libs = [ "execinfo" ]
   } else if (current_os == "aix") {
     sources += [
       "src/base/debug/stack_trace_posix.cc",

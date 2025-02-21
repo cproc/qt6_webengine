@@ -76,6 +76,12 @@ enum Sandbox {
   [EnableIf=is_win]
   kFileUtil,
 
+  [EnableIf=is_openbsd]
+  kVideoCapture,
+
+  [EnableIf=is_freebsd]
+  kVideoCapture,
+
   // Allows access to file contents and Windows APIs for parsing icons from PE
   // files.
   [EnableIf=is_win]

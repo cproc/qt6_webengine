@@ -30,6 +30,7 @@ void RendererMainPlatformDelegate::PlatformUninitialize() {
 }
 
 bool RendererMainPlatformDelegate::EnableSandbox() {
+#if 0
   // The setuid sandbox is started in the zygote process: zygote_main_linux.cc
   // https://chromium.googlesource.com/chromium/src/+/main/docs/linux/suid_sandbox.md
   //
@@ -44,6 +45,7 @@ bool RendererMainPlatformDelegate::EnableSandbox() {
   // any renderer has been started.
   // Here, we test that the status of SeccompBpf in the renderer is consistent
   // with what SandboxLinux::GetStatus() said we would do.
+#if !defined(OS_BSD)
   auto* linux_sandbox = sandbox::policy::SandboxLinux::GetInstance();
   if (linux_sandbox->GetStatus() & sandbox::policy::SandboxLinux::kSeccompBPF) {
     CHECK(linux_sandbox->seccomp_bpf_started());
@@ -65,7 +67,8 @@ bool RendererMainPlatformDelegate::EnableSandbox() {
     CHECK_EQ(errno, EPERM);
   }
 #endif  // __x86_64__
-
+#endif
+#endif
   return true;
 }
 

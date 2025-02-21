@@ -254,7 +254,9 @@ static void SafeOverridePathImpl(const char *keyName, int key, const base::FileP
 
 absl::optional<int> ContentMainDelegateQt::BasicStartupComplete()
 {
+#if 0
     SafeOverridePath(base::FILE_EXE, WebEngineLibraryInfo::getPath(base::FILE_EXE));
+#endif
     SafeOverridePath(base::DIR_QT_LIBRARY_DATA, WebEngineLibraryInfo::getPath(base::DIR_QT_LIBRARY_DATA));
     SafeOverridePath(base::DIR_ASSETS, WebEngineLibraryInfo::getPath(base::DIR_ASSETS));
     SafeOverridePath(base::DIR_EXE, WebEngineLibraryInfo::getPath(base::DIR_ASSETS));

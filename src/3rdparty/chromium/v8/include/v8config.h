@@ -129,6 +129,9 @@ path. Add it with -I<path> to the command line
 # define V8_OS_BSD 1
 # define V8_OS_FREEBSD 1
 # define V8_OS_POSIX 1
+#if defined (__GENODE__)
+# define V8_OS_GENODE 1
+#endif
 # define V8_OS_STRING "freebsd"
 
 #elif defined(__Fuchsia__)
@@ -184,6 +187,8 @@ path. Add it with -I<path> to the command line
   && !defined(V8_TARGET_OS_FUCHSIA) \
   && !defined(V8_TARGET_OS_IOS) \
   && !defined(V8_TARGET_OS_LINUX) \
+  && !defined(V8_TARGET_OS_OPENBSD) \
+  && !defined(V8_TARGET_OS_FREEBSD) \
   && !defined(V8_TARGET_OS_MACOS) \
   && !defined(V8_TARGET_OS_WIN) \
   && !defined(V8_TARGET_OS_CHROMEOS)
@@ -196,6 +201,8 @@ path. Add it with -I<path> to the command line
   || defined(V8_TARGET_OS_FUCHSIA) \
   || defined(V8_TARGET_OS_IOS) \
   || defined(V8_TARGET_OS_LINUX) \
+  || defined(V8_TARGET_OS_OPENBSD) \
+  || defined(V8_TARGET_OS_FREEBSD) \
   || defined(V8_TARGET_OS_MACOS) \
   || defined(V8_TARGET_OS_WIN) \
   || defined(V8_TARGET_OS_CHROMEOS)
@@ -217,6 +224,16 @@ path. Add it with -I<path> to the command line
 
 #ifdef V8_OS_LINUX
 # define V8_TARGET_OS_LINUX
+#endif
+
+#ifdef V8_OS_OPENBSD
+# define V8_TARGET_OS_OPENBSD
+# define V8_TARGET_OS_BSD
+#endif
+
+#ifdef V8_OS_FREEBSD
+# define V8_TARGET_OS_OPENBSD
+# define V8_TARGET_OS_BSD
 #endif
 
 #ifdef V8_OS_MACOS

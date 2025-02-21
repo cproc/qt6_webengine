@@ -71,6 +71,26 @@ bool GetPCIDevicesWithLibPCI(std::vector<GPUDeviceInfo> *devices)
 
 bool GetSystemInfo(SystemInfo *info)
 {
+	return false;
+#if 0
+#if defined(__OpenBSD__) || defined(__FreeBSD__)
+    if (!CollectMesaCardInfo(&(info->gpus)))
+    {
+#if defined(__FreeBSD__)
+        if (!GetPCIDevicesFreeBSD(&(info->gpus)))
+        {
+#endif
+#if defined(ANGLE_USE_VULKAN_SYSTEM_INFO)
+            // Try vulkan backend to get GPU info
+            return GetSystemInfoVulkan(info);
+#else
+            return false;
+#endif
+#if defined(__FreeBSD__)
+        }
+#endif
+    }
+#else
     if (!GetPCIDevicesWithLibPCI(&(info->gpus)))
     {
 #if defined(ANGLE_USE_VULKAN_SYSTEM_INFO)
@@ -85,6 +105,7 @@ bool GetSystemInfo(SystemInfo *info)
     {
         return false;
     }
+#endif
 
     GetDualGPUInfo(info);
 
@@ -144,6 +165,7 @@ bool GetSystemInfo(SystemInfo *info)
     }
 
     return true;
+#endif
 }
 
 }  // namespace angle
