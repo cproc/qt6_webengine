@@ -39,7 +39,7 @@
 #include <sys/proc.h>
 #endif
 
-#if BUILDFLAG(IS_FREEBSD)
+#if BUILDFLAG(IS_FREEBSD) && 0
 #include <sys/user.h>
 #endif
 
@@ -82,7 +82,7 @@ bool BeingDebugged() {
 
   if (is_set)
     return being_debugged;
-
+#if 0
   // Initialize mib, which tells sysctl what info we want.  In this case,
   // we're looking for information about a specific process ID.
   int mib[] = {
@@ -144,6 +144,7 @@ bool BeingDebugged() {
 out:
 #if BUILDFLAG(IS_OPENBSD)
   free(info);
+#endif
 #endif
   return being_debugged;
 }
