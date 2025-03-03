@@ -8,7 +8,9 @@
 #include <stddef.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#if 0
 #include <sys/user.h>
+#endif
 #include <unistd.h>
 
 #include <fcntl.h> /* O_RDONLY */
@@ -45,6 +47,7 @@ std::unique_ptr<ProcessMetrics> ProcessMetrics::CreateProcessMetrics(
 }
 
 TimeDelta ProcessMetrics::GetCumulativeCPUUsage() {
+#if 0
   struct kinfo_proc info;
   size_t length = sizeof(struct kinfo_proc);
   struct timeval tv;
@@ -55,6 +58,9 @@ TimeDelta ProcessMetrics::GetCumulativeCPUUsage() {
     return TimeDelta();
 
   return Microseconds(info.ki_runtime);
+#else
+  return TimeDelta();
+#endif
 }
 
 bool ProcessMetrics::GetIOCounters(IoCounters* io_counters) const {

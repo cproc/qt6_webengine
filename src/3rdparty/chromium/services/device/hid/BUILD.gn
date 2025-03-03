@@ -45,7 +45,7 @@ source_set("hid") {
     libs = ["fido2", "cbor", "usbhid", "crypto", "util"]
   }
 
-  if (is_freebsd) {
+  if (is_freebsd && false) {
     sources += [
       "hid_connection_freebsd.cc",
       "hid_connection_freebsd.h",
