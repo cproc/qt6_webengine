@@ -14,7 +14,7 @@
 
 #if BUILDFLAG(IS_OPENBSD)
 #define vm_rssize info.p_vm_rssize
-#elif BUILDFLAG(IS_FREEBSD)
+#elif BUILDFLAG(IS_FREEBSD) && 0
 #include <sys/user.h>
 #define vm_rssize info.ki_rssize
 #endif
@@ -24,6 +24,7 @@ namespace memory_instrumentation {
 // static
 bool OSMetrics::FillOSMemoryDump(base::ProcessId pid,
                                  mojom::RawOSMemDump* dump) {
+#if 0
   base::Process process = pid == base::kNullProcessId
                               ? base::Process::Current()
                               : base::Process::Open(pid);
@@ -46,6 +47,9 @@ bool OSMetrics::FillOSMemoryDump(base::ProcessId pid,
   dump->platform_private_footprint->vm_swap_bytes = 0;
 
   return true;
+#else
+  return false;
+#endif
 }
 
 // static
