@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <stddef.h>
 #include <stdint.h>
-#if 0
+#if !BUILDFLAG(IS_FREEBSD)
 #include <sys/syscall.h>
 #endif
 #include <sys/utsname.h>

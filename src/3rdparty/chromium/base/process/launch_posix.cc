@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <sys/resource.h>
-#if 0
+#if !BUILDFLAG(IS_FREEBSD)
 #include <sys/syscall.h>
 #endif
 #include <sys/time.h>

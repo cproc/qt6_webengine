@@ -14,7 +14,7 @@
 #if !defined(WEBRTC_BSD)
 #include <sys/prctl.h>
 #endif
-#if 0
+#if !defined(WEBRTC_BSD)
 #include <sys/syscall.h>
 #endif
 #endif

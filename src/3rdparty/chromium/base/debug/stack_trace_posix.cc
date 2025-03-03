@@ -14,7 +14,7 @@
 #include <string.h>
 #include <sys/param.h>
 #include <sys/stat.h>
-#if 0
+#if BUILDFLAG(IS_LINUX)
 #include <sys/syscall.h>
 #endif
 #include <sys/types.h>
