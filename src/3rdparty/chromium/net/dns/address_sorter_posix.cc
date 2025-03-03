@@ -13,7 +13,7 @@
 #include "base/memory/raw_ptr.h"
 #include "build/build_config.h"
 
-#if BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
+#if (BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)) && 0
 #include <sys/socket.h>  // Must be included before ifaddrs.h.
 #include <ifaddrs.h>
 #include <net/if.h>
@@ -414,7 +414,7 @@ void AddressSorterPosix::OnIPAddressChanged() {
     info.prefix_length = msg.ifa_prefixlen;
     FillPolicy(address, &info);
   }
-#elif BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
+#elif (BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)) && 0
   // It's not clear we will receive notification when deprecated flag changes.
   // Socket for ioctl.
   int ioctl_socket = socket(AF_INET6, SOCK_DGRAM, 0);
