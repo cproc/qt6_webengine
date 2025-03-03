@@ -17,8 +17,6 @@
 #elif defined(SK_BUILD_FOR_ANDROID) || defined(SK_BUILD_FOR_UNIX) && !defined(__OpenBSD__)
 #if 0
 #include <malloc.h>
-#else
-#include <malloc_np.h>
 #endif
 #elif defined(SK_BUILD_FOR_WIN)
 #include <malloc.h>
@@ -42,7 +40,7 @@ SkSpan<std::byte> complete_size(void* ptr, size_t size) {
     #elif defined(SK_BUILD_FOR_ANDROID) && __ANDROID_API__ >= 17
         completeSize = malloc_usable_size(ptr);
         SkASSERT(completeSize >= size);
-    #elif defined(SK_BUILD_FOR_UNIX) && !defined(__OpenBSD__)
+    #elif defined(SK_BUILD_FOR_UNIX) && !defined(__OpenBSD__) && 0
         completeSize = malloc_usable_size(ptr);
         SkASSERT(completeSize >= size);
     #elif defined(SK_BUILD_FOR_WIN)
