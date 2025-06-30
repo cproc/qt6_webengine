@@ -5,6 +5,7 @@
 #ifndef UI_ACCESSIBILITY_AX_TEXT_ATTRIBUTES_H_
 #define UI_ACCESSIBILITY_AX_TEXT_ATTRIBUTES_H_
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

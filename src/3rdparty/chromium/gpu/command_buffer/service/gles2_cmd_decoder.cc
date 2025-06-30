@@ -7708,6 +7708,8 @@ GLenum GLES2DecoderImpl::AdjustGetPname(GLenum pname) {
   return pname;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
 void GLES2DecoderImpl::DoGetBooleanv(GLenum pname,
                                      GLboolean* params,
                                      GLsizei params_size) {
@@ -7778,6 +7780,8 @@ void GLES2DecoderImpl::DoGetInteger64v(GLenum pname,
     params[ii] = static_cast<GLint64>(values[ii]);
   }
 }
+
+#pragma GCC diagnostic pop
 
 void GLES2DecoderImpl::DoGetIntegerv(GLenum pname,
                                      GLint* params,
