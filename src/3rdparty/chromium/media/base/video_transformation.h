@@ -5,6 +5,7 @@
 #ifndef MEDIA_BASE_VIDEO_TRANSFORMATION_H_
 #define MEDIA_BASE_VIDEO_TRANSFORMATION_H_
 
+#include <cstdint>
 #include <string>
 
 #include "base/numerics/math_constants.h"
